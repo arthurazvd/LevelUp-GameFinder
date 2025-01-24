@@ -23,8 +23,8 @@ Clonar o Repositório
 Clone este repositório para sua máquina local:
 
 bash
-git clone https://github.com/seu-usuario/rawg-game-finder.git
-cd rawg-game-finder
+git clone https://github.com/arthurazvd/levelup-gamefinder.git
+cd levelup-gamefinder
 Instalar Dependências
 Certifique-se de ter o Node.jsinstalado. Depois, instale as dependências do projeto:
 
