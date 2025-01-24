@@ -22,6 +22,3 @@ img {
   @apply w-full object-cover rounded;
 }
 
-div {
-  @apply shadow-lg transition-transform ease-in-out duration-150;
-}

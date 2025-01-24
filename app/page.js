@@ -1,126 +1,118 @@
-"use client"; 
-// Declara que este componente será executado no cliente (React Client Component).
+"use client";
 
-import { useState } from "react";
-// Importa o hook useState do React para gerenciar estados no componente.
+import { useState, useEffect } from "react";
 
 const HomePage = () => {
-  // Define o componente funcional HomePage.d
-
   const [games, setGames] = useState([]);
-  // Estado para armazenar a lista de jogos retornados pela API.
-
   const [searchQuery, setSearchQuery] = useState("");
-  // Estado para armazenar a consulta de pesquisa inserida pelo usuário.
-
   const [error, setError] = useState(null);
-  // Estado para armazenar mensagens de erro, caso ocorra algum problema na busca.
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
-  const handleSearch = async () => {
-    // Função assíncrona para buscar jogos na API RAWG.
-
+  // Função para buscar jogos
+  const fetchGames = async (query, newPage) => {
+    setLoading(true);
     try {
       const response = await fetch(
-        `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&search=${searchQuery}`
+        `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&search=${query}&page=${newPage}&page_size=10`
       );
-      // Faz uma chamada à API RAWG com a chave de API e o termo de pesquisa.
-
-      if (!response.ok) {
-        throw new Error("Erro ao buscar jogos");
-        // Caso a resposta da API não seja OK, lança um erro.
-      }
+      if (!response.ok) throw new Error("Erro ao buscar jogos");
 
       const data = await response.json();
-      // Converte a resposta da API em JSON.
+      const newResults = newPage === 1 ? data.results : [...games, ...data.results];
 
-      setGames(data.results);
-      // Atualiza o estado com os resultados retornados pela API.
-
+      setGames(newResults);
       setError(null);
-      // Reseta qualquer erro anterior.
+      setPage(newPage);
     } catch (err) {
       setError(err.message);
-      // Atualiza o estado de erro com a mensagem do erro capturado.
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Carrega os jogos mais bem ranqueados ao iniciar o app
+  useEffect(() => {
+    fetchGames("", 1); // Busca sem um termo de pesquisa para retornar os jogos mais bem ranqueados
+  }, []);
+
+  const handleSearch = () => {
+    if (!searchQuery) {
+      setError("Por favor, insira um termo de pesquisa.");
+      return;
+    }
+    fetchGames(searchQuery, 1); // Faz a busca com o termo digitado
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearch();
+    }
+  };
+
+  const loadMore = () => {
+    fetchGames(searchQuery, page + 1); // Carrega a próxima página com o termo atual
   };
 
   return (
     <div className="container mx-auto p-4">
-      {/* Container principal da página com estilos aplicados via Tailwind CSS. */}
-
       <h1 className="text-2xl font-bold mb-4 text-center">LevelUp - Game Finder</h1>
-      {/* Cabeçalho com o título da aplicação. */}
-
       <div className="flex gap-4 mb-4">
-        {/* Div para agrupar o campo de entrada e o botão de pesquisa. */}
-
+        {/* Campo de pesquisa */}
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          // Atualiza o estado de `searchQuery` com o valor digitado no campo.
-
+          onKeyDown={handleKeyPress}
           placeholder="Pesquisar Jogos..."
-          // Texto exibido no campo de entrada antes de o usuário digitar.
-
           className="p-2 border rounded w-full"
-          // Estilos aplicados ao campo de entrada usando Tailwind CSS.
         />
-
+        {/* Botão de pesquisa */}
         <button
           onClick={handleSearch}
-          // Chama a função handleSearch ao clicar no botão.
-
           className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-          // Estilos aplicados ao botão, incluindo transições para hover.
         >
           Pesquisar
         </button>
-        {/* Botão para disparar a busca dos jogos. */}
       </div>
-
-      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-      {/* Se houver um erro, exibe a mensagem de erro com estilos de texto vermelho. */}
-
-      <div className="grid grid-cols-5 gap-4">
-        {/* Div para exibir os resultados em uma grade com 5 colunas e espaçamento entre os itens. */}
-
+      {/* Mensagem de erro */}
+      {error && <div className="text-red-500 text-center my-4">{error}</div>}
+      {/* Indicador de carregamento */}
+      {loading && <div className="text-center my-4">Carregando...</div>}
+      {/* Resultados */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {games.map((game) => (
-          // Mapeia a lista de jogos retornados pela API e cria um card para cada jogo.
-
           <div
             key={game.id}
-            // Chave única para cada item da lista, baseada no ID do jogo.
-
-            className="border p-2 rounded shadow-lg text-center bg-white flex flex-col"
-            // Estilos aplicados a cada card do jogo.
+            className="border p-2 rounded text-center bg-white flex flex-col"
           >
             <div className="h-40 overflow-hidden">
-              {/* Div para conter a imagem do jogo com altura fixa e comportamento de overflow. */}
-
               <img
                 src={game.background_image}
-                // URL da imagem de fundo do jogo.
-
                 alt={game.name}
-                // Texto alternativo para a imagem (nome do jogo).
-
                 className="w-full h-full object-cover rounded"
-                // Estilos para a imagem, garantindo que ela ocupe todo o espaço disponível.
               />
             </div>
-
             <h2 className="text-lg font-semibold mt-2">{game.name}</h2>
-            {/* Nome do jogo exibido abaixo da imagem, com estilo de texto maior e negrito. */}
-
             <p>Rating: {game.rating}</p>
-            {/* Avaliação (rating) do jogo exibida como texto. */}
+            <p>Data de Lançamento: {game.released || "N/A"}</p>
           </div>
         ))}
       </div>
+      {/* Botão de carregar mais */}
+      {games.length > 0 && !loading && (
+        <div className="text-center mt-4">
+          <button
+            onClick={loadMore}
+            className="p-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+          >
+            Carregar Mais
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default HomePage;
-// Exporta o componente HomePage como padrão para ser usado em outras partes da aplicação.
