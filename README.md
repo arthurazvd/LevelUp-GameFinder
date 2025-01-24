@@ -54,17 +54,5 @@ bash
 npm run dev
 O aplicativo estará disponível em http://localhost:3000.
 
-Estrutura de Pastas 🗂️
-plaintext
-rawg-game-finder/
-├── app/
-│   ├── globals.css         # Estilos globais (Tailwind CSS)
-│   ├── layout.js           # Layout do aplicativo
-│   └── page.js             # Página principal
-├── public/                 # Arquivos públicos
-├── .env.local              # Chave da API (não incluída no controle de versão)
-├── tailwind.config.cjs     # Configuração do Tailwind CSS
-├── next.config.mjs         # Configuração do Next.js
-├── package.json            # Dependências do projeto
-└── README.md               # Este arquivo
 Observação 📋
+Atualmente, o aplicativo exibe apenas o nome, imagem e avaliação dos jogos. Outras informações podem ser adicionadas conforme necessário no futuro.
