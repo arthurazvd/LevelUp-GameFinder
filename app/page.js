@@ -5,7 +5,7 @@ import { useState } from "react";
 // Importa o hook useState do React para gerenciar estados no componente.
 
 const HomePage = () => {
-  // Define o componente funcional HomePage.
+  // Define o componente funcional HomePage.d
 
   const [games, setGames] = useState([]);
   // Estado para armazenar a lista de jogos retornados pela API.
