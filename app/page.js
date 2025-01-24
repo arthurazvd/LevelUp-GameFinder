@@ -9,12 +9,11 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
 
-  // Função para buscar jogos
   const fetchGames = async (query, newPage) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&search=${query}&page=${newPage}&page_size=10`
+        `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&search=${query}&page=${newPage}&page_size=20`
       );
       if (!response.ok) throw new Error("Erro ao buscar jogos");
 
@@ -41,7 +40,7 @@ const HomePage = () => {
       setError("Por favor, insira um termo de pesquisa.");
       return;
     }
-    fetchGames(searchQuery, 1); // Faz a busca com o termo digitado
+    fetchGames(searchQuery, 1);
   };
 
   const handleKeyPress = (event) => {
@@ -52,13 +51,20 @@ const HomePage = () => {
   };
 
   const loadMore = () => {
-    fetchGames(searchQuery, page + 1); // Carrega a próxima página com o termo atual
+    fetchGames(searchQuery, page + 1);
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">LevelUp - Game Finder</h1>
-      <div className="flex gap-4 mb-4">
+    <div className="relative min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8 mt-6">
+      {/* Loader centralizado */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+      )}
+
+      <h1 className="text-2xl font-bold mb-8 text-center mt-6">LevelUp - Game Finder</h1>
+      <div className="flex gap-4 mb-8">
         {/* Campo de pesquisa */}
         <input
           type="text"
@@ -78,14 +84,12 @@ const HomePage = () => {
       </div>
       {/* Mensagem de erro */}
       {error && <div className="text-red-500 text-center my-4">{error}</div>}
-      {/* Indicador de carregamento */}
-      {loading && <div className="text-center my-4">Carregando...</div>}
       {/* Resultados */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {games.map((game) => (
           <div
             key={game.id}
-            className="border p-2 rounded text-center bg-white flex flex-col"
+            className="border p-4 rounded text-center bg-white flex flex-col"
           >
             <div className="h-40 overflow-hidden">
               <img
@@ -101,8 +105,8 @@ const HomePage = () => {
         ))}
       </div>
       {/* Botão de carregar mais */}
-      {games.length > 0 && !loading && (
-        <div className="text-center mt-4">
+      {games.length > 0 && (
+        <div className="text-center mt-8 mb-8">
           <button
             onClick={loadMore}
             className="p-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
