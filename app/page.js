@@ -1,101 +1,126 @@
-import Image from "next/image";
+"use client"; 
+// Declara que este componente será executado no cliente (React Client Component).
 
-export default function Home() {
+import { useState } from "react";
+// Importa o hook useState do React para gerenciar estados no componente.
+
+const HomePage = () => {
+  // Define o componente funcional HomePage.
+
+  const [games, setGames] = useState([]);
+  // Estado para armazenar a lista de jogos retornados pela API.
+
+  const [searchQuery, setSearchQuery] = useState("");
+  // Estado para armazenar a consulta de pesquisa inserida pelo usuário.
+
+  const [error, setError] = useState(null);
+  // Estado para armazenar mensagens de erro, caso ocorra algum problema na busca.
+
+  const handleSearch = async () => {
+    // Função assíncrona para buscar jogos na API RAWG.
+
+    try {
+      const response = await fetch(
+        `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&search=${searchQuery}`
+      );
+      // Faz uma chamada à API RAWG com a chave de API e o termo de pesquisa.
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar jogos");
+        // Caso a resposta da API não seja OK, lança um erro.
+      }
+
+      const data = await response.json();
+      // Converte a resposta da API em JSON.
+
+      setGames(data.results);
+      // Atualiza o estado com os resultados retornados pela API.
+
+      setError(null);
+      // Reseta qualquer erro anterior.
+    } catch (err) {
+      setError(err.message);
+      // Atualiza o estado de erro com a mensagem do erro capturado.
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="container mx-auto p-4">
+      {/* Container principal da página com estilos aplicados via Tailwind CSS. */}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <h1 className="text-2xl font-bold mb-4 text-center">LevelUp - Game Finder</h1>
+      {/* Cabeçalho com o título da aplicação. */}
+
+      <div className="flex gap-4 mb-4">
+        {/* Div para agrupar o campo de entrada e o botão de pesquisa. */}
+
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          // Atualiza o estado de `searchQuery` com o valor digitado no campo.
+
+          placeholder="Pesquisar Jogos..."
+          // Texto exibido no campo de entrada antes de o usuário digitar.
+
+          className="p-2 border rounded w-full"
+          // Estilos aplicados ao campo de entrada usando Tailwind CSS.
+        />
+
+        <button
+          onClick={handleSearch}
+          // Chama a função handleSearch ao clicar no botão.
+
+          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          // Estilos aplicados ao botão, incluindo transições para hover.
+        >
+          Pesquisar
+        </button>
+        {/* Botão para disparar a busca dos jogos. */}
+      </div>
+
+      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+      {/* Se houver um erro, exibe a mensagem de erro com estilos de texto vermelho. */}
+
+      <div className="grid grid-cols-5 gap-4">
+        {/* Div para exibir os resultados em uma grade com 5 colunas e espaçamento entre os itens. */}
+
+        {games.map((game) => (
+          // Mapeia a lista de jogos retornados pela API e cria um card para cada jogo.
+
+          <div
+            key={game.id}
+            // Chave única para cada item da lista, baseada no ID do jogo.
+
+            className="border p-2 rounded shadow-lg text-center bg-white flex flex-col"
+            // Estilos aplicados a cada card do jogo.
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <div className="h-40 overflow-hidden">
+              {/* Div para conter a imagem do jogo com altura fixa e comportamento de overflow. */}
+
+              <img
+                src={game.background_image}
+                // URL da imagem de fundo do jogo.
+
+                alt={game.name}
+                // Texto alternativo para a imagem (nome do jogo).
+
+                className="w-full h-full object-cover rounded"
+                // Estilos para a imagem, garantindo que ela ocupe todo o espaço disponível.
+              />
+            </div>
+
+            <h2 className="text-lg font-semibold mt-2">{game.name}</h2>
+            {/* Nome do jogo exibido abaixo da imagem, com estilo de texto maior e negrito. */}
+
+            <p>Rating: {game.rating}</p>
+            {/* Avaliação (rating) do jogo exibida como texto. */}
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
+
+export default HomePage;
+// Exporta o componente HomePage como padrão para ser usado em outras partes da aplicação.
