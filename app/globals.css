@@ -22,3 +22,65 @@ img {
   @apply w-full object-cover rounded;
 }
 
+:root {
+  --primary-color: #1e3a8a; /* Azul profundo */
+  --secondary-color: #22c55e; /* Verde */
+  --text-color: #111827; /* Cinza escuro */
+  --bg-color: #f9fafb; /* Fundo claro */
+  --font-geist-sans: 'Geist Sans', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+
+body {
+  font-family: var(--font-geist-sans);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 0;
+}
+
+header ul {
+  display: flex;
+  gap: 1rem;
+}
+
+header a {
+  font-weight: bold;
+}
+
+footer {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+select {
+  font-family: var(--font-geist-sans);
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  background-color: #fff;
+  color: #111827;
+}
+
+select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+
