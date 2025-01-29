@@ -1,5 +1,4 @@
-"use client";
-
+"use client"; 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
@@ -27,13 +26,13 @@ const genreTranslations = {
 };
 
 const HomePage = () => {
-  const [games, setGames] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [games, setGames] = useState([]); // Estado para armazenar os jogos
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para armazenar o termo de pesquisa
   const [genre, setGenre] = useState(""); // Estado para o gênero selecionado
-  const [genres, setGenres] = useState([]); // Estado para armazenar os gêneros
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [genres, setGenres] = useState([]); // Estado para armazenar os gêneros disponíveis
+  const [error, setError] = useState(null); // Estado para armazenar erros
+  const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
+  const [page, setPage] = useState(1); // Estado para controlar a página de jogos
 
   // Função para buscar os gêneros disponíveis
   const fetchGenres = async () => {
@@ -42,16 +41,16 @@ const HomePage = () => {
         `https://api.rawg.io/api/genres?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}`
       );
       if (!response.ok) throw new Error("Erro ao buscar gêneros");
-
       const data = await response.json();
-      setGenres(data.results);
+      setGenres(data.results); // Armazena os gêneros disponíveis no estado
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Define o erro no estado
     }
   };
 
+  // Função para buscar os jogos com base no termo de pesquisa e gênero
   const fetchGames = async (query = "", newPage = 1, selectedGenre = "") => {
-    setLoading(true);
+    setLoading(true); // Inicia o carregamento
     try {
       const response = await fetch(
         `https://api.rawg.io/api/games?key=${process.env.NEXT_PUBLIC_RAWG_API_KEY}&search=${query}&page=${newPage}&page_size=20${selectedGenre ? `&genres=${selectedGenre}` : ""}`
@@ -60,45 +59,48 @@ const HomePage = () => {
 
       const data = await response.json();
       const newResults = newPage === 1 ? data.results : [...games, ...data.results];
-
-      setGames(newResults);
-      setError(null);
-      setPage(newPage);
+      setGames(newResults); // Armazena os jogos no estado
+      setError(null); // Limpa o erro, se houver
+      setPage(newPage); // Atualiza a página
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Define o erro no estado
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza o carregamento
     }
   };
 
-  // Carrega os jogos iniciais e os gêneros ao abrir a página
+  // Carrega os jogos e gêneros ao abrir a página
   useEffect(() => {
-    fetchGames();
-    fetchGenres();
+    fetchGames(); // Busca jogos iniciais
+    fetchGenres(); // Busca gêneros
   }, []);
 
+  // Função para realizar a pesquisa
   const handleSearch = () => {
     if (!searchQuery) {
-      setError("Por favor, insira um termo de pesquisa.");
+      setError("Por favor, insira um termo de pesquisa."); // Mensagem de erro caso o campo de pesquisa esteja vazio
       return;
     }
-    fetchGames(searchQuery, 1, genre);
+    fetchGames(searchQuery, 1, genre); // Busca os jogos com base no termo de pesquisa
   };
 
+  // Função para tratar a tecla Enter na pesquisa
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      event.preventDefault();
-      handleSearch();
+      event.preventDefault(); // Previne o comportamento padrão
+      handleSearch(); // Realiza a pesquisa
     }
   };
 
+  // Função para alterar o gênero e atualizar a lista de jogos
   const handleGenreChange = (selectedGenre) => {
-    setGenre(selectedGenre);
-    fetchGames(searchQuery, 1, selectedGenre); // Atualiza os jogos apenas com base no gênero
+    setGenre(selectedGenre); // Atualiza o gênero selecionado
+    fetchGames(searchQuery, 1, selectedGenre); // Atualiza os jogos com base no novo gênero
   };
 
+  // Função para carregar mais jogos ao clicar no botão
   const loadMore = () => {
-    fetchGames(searchQuery, page + 1, genre);
+    fetchGames(searchQuery, page + 1, genre); // Carrega mais jogos
   };
 
   return (
@@ -133,7 +135,7 @@ const HomePage = () => {
             <option value="">Todos</option>
             {genres.map((genre) => (
               <option key={genre.id} value={genre.id}>
-                {genreTranslations[genre.slug] || genre.name}
+                {genreTranslations[genre.slug] || genre.name} {/* Exibe o nome traduzido ou original do gênero */}
               </option>
             ))}
           </select>
