@@ -7,7 +7,11 @@ Um aplicativo simples para buscar informações sobre jogos, utilizando a [RAWG 
 - Exibir **informações básicas** sobre cada jogo:
   - Nome
   - Imagem
-  - Avaliação (Rating)
+  - Avaliação
+  - Lançamento
+  - Desenvolvedor
+  - Gênero
+  - Plataformas
 
 ## Tecnologias Utilizadas 🛠️
 - **Next.js**: Framework React para **Server-Side Rendering (SSR)** e **Static Site Generation (SSG)**.
@@ -25,20 +29,21 @@ Clone este repositório para sua máquina local com o seguinte comando:
 ```bash
 git clone https://github.com/arthurazvd/levelup-gamefinder.git
 cd levelup-gamefinder
-2. Instalar as Dependências
+````
+### 2. Instalar as Dependências
 Certifique-se de ter o Node.js instalado em sua máquina. Caso não tenha, você pode baixá-lo em nodejs.org.
 
 Depois de clonar o repositório, instale as dependências do projeto com o seguinte comando:
 
-bash
-Copiar
+```bash
 npm install
+```
 Ou, caso prefira usar o Yarn:
 
-bash
-Copiar
+```bash
 yarn install
-3. Configurar a Chave da API (RAWG)
+```
+### 3. Configurar a Chave da API (RAWG)
 A API da RAWG exige uma API Key para acessar os dados dos jogos. Siga os passos abaixo para obter e configurar a chave no seu projeto:
 
 Criar uma Conta no RAWG:
@@ -50,26 +55,27 @@ Após o login, vá até a seção API Key no painel de usuário e copie a chave 
 Adicionar a Chave ao Projeto:
 
 Crie um arquivo .env.local na raiz do seu projeto, se ele ainda não existir:
-bash
-Copiar
+```bash
 touch .env.local
+```
 No arquivo .env.local, adicione a seguinte linha, substituindo SUA_API_KEY pela chave copiada:
 env
-Copiar
+```env
 NEXT_PUBLIC_RAWG_API_KEY=SUA_API_KEY
+````
 Nota: O arquivo .env.local é ignorado pelo controle de versão (via .gitignore), garantindo que a chave da API não seja exposta publicamente.
 
 4. Rodar o Servidor de Desenvolvimento
 Após configurar a chave da API, inicie o servidor de desenvolvimento com o comando:
 
-bash
-Copiar
+```bash
 npm run dev
+```
 Ou, se estiver utilizando o Yarn:
 
-bash
-Copiar
+```bash
 yarn dev
+```
 O aplicativo estará disponível em http://localhost:3000.
 
 Observações 📋
@@ -78,24 +84,24 @@ Atualmente, o aplicativo exibe apenas o nome, a imagem e a avaliação dos jogos
 Comandos Comuns
 Instalar dependências:
 
-bash
-Copiar
+```bash
 npm install
+```
 Rodar servidor em modo desenvolvimento:
 
-bash
-Copiar
+```bash
 npm run dev
+```
 Criar build para produção:
 
-bash
-Copiar
+```bash
 npm run build
+```
 Iniciar servidor de produção (após build):
 
-bash
-Copiar
+```bash
 npm start
+```
 Contribuindo 🤝
 Se você deseja contribuir para o projeto, sinta-se à vontade para fazer um fork do repositório, criar uma branch e enviar um pull request. Ficarei feliz em revisar e integrar melhorias!
 
