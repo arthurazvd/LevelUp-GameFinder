@@ -1,9 +1,34 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { use } from "react"; // Adicione a importação de React.use()
+
+const genreTranslations = {
+  action: "Ação",
+  adventure: "Aventura",
+  rpg: "RPG",
+  shooter: "Tiro",
+  sports: "Esportes",
+  strategy: "Estratégia",
+  fighting: "Luta",
+  racing: "Corrida",
+  indie: "Indie",
+  puzzle: "Quebra-cabeça",
+  platformer: "Plataforma",
+  simulation: "Simulação",
+  arcade: "Arcade",
+  board_games: "Jogos de Tabuleiro",
+  family: "Família",
+  educational: "Educacional",
+  music: "Música",
+  party: "Festa",
+  card: "Cartas",
+};
 
 const GameDetails = ({ params }) => {
-  const { id } = params; // O ID do jogo vindo da URL
+  // Use o React.use() para descompactar o 'params'
+  const { id } = use(params); // Agora o 'id' pode ser acessado corretamente
+
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,11 +52,17 @@ const GameDetails = ({ params }) => {
       }
     };
 
-    fetchGameDetails();
+    if (id) {
+      fetchGameDetails();
+    }
   }, [id]);
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-solid" style={{ borderColor: 'var(--primary-color) transparent' }}></div>
+      </div>
+    );
   }
 
   if (error) {
@@ -39,18 +70,28 @@ const GameDetails = ({ params }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-6">
+    <div>
       {game && (
-        <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-          <img
-            src={game.background_image}
-            alt={game.name}
-            className="w-full h-64 object-cover rounded mb-6"
-          />
-          <h1 className="text-2xl font-bold mb-4">{game.name}</h1>
-          <p><strong>Rating:</strong> {game.rating}</p>
-          <p><strong>Data de Lançamento:</strong> {game.released}</p>
-          <p className="mt-4">{game.description_raw}</p>
+        <div className="flex justify-between items-center h-full">
+          {/* Informações do jogo */}
+          <div className="relative z-10 text-left md:w-1/2 sm:w-full p-6">
+            <p className="text-white mt-4"><strong>Descrição: </strong>{game.description_raw}</p>
+          </div>
+
+          {/* Imagem do jogo */}
+          <div className="relative z-10 md:w-1/2 hidden sm:block p-6">
+            <h1 className="text-2xl font-bold mb-4 text-white">{game.name}</h1>
+            <img
+              src={game.background_image}
+              alt={game.name}
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
+            />
+            <p className="text-white mt-4"><strong>Avaliação: </strong> {game.rating || "N/A"}</p>
+            <p className="text-white"><strong>Lançamento: </strong> {game.released || "N/A"}</p>
+            <p className="text-white"><strong>Desenvolvedor: </strong> {game.developers.map(dev => dev.name).join(', ') || "N/A"}</p>
+            <p className="text-white"><strong>Gênero: </strong> {game.genres.map(genre => genreTranslations[genre.slug] || genre.name).join(', ') || "N/A"}</p>
+            <p className="text-white"><strong>Plataformas: </strong> {game.platforms.map(platform => platform.platform.name).join(', ') || "N/A"}</p>
+          </div>
         </div>
       )}
     </div>

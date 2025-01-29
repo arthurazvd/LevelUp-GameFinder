@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Image from "next/image";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,26 +21,32 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-bg1 text-text1 flex flex-col min-h-screen`}
       >
         {/* Cabeçalho */}
-        <header className="bg-blue-600 text-white py-4 shadow-lg">
+        <header className="bg-primary text-white py-4 shadow-lg">
           <div className="container mx-auto px-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold">🎮 LevelUp</h1>
+            <Image 
+                src="/images/logo.png" 
+                alt="Logo LevelUp" 
+                width={150} 
+                height={50} 
+                className="w-[100px] h-auto" 
+              />
             <nav>
               <ul className="flex gap-4">
                 <li>
-                  <a href="/" className="hover:underline">
+                  <a href="/">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="#about" className="hover:underline">
+                  <a href="#about">
                     Sobre
                   </a>
                 </li>
                 <li>
-                  <a href="#contact" className="hover:underline">
+                  <a href="#contact">
                     Contato
                   </a>
                 </li>
@@ -49,12 +56,12 @@ export default function RootLayout({ children }) {
         </header>
 
         {/* Conteúdo principal */}
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8 flex-grow">
           {children}
         </main>
 
         {/* Rodapé */}
-        <footer className="bg-blue-600 text-white py-4 mt-8">
+        <footer className="bg-primary text-white py-4 mt-8">
           <div className="container mx-auto px-4 text-center">
             <p>&copy; {new Date().getFullYear()} LevelUp. Todos os direitos reservados.</p>
           </div>
