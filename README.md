@@ -65,7 +65,7 @@ NEXT_PUBLIC_RAWG_API_KEY=SUA_API_KEY
 ````
 Nota: O arquivo .env.local é ignorado pelo controle de versão (via .gitignore), garantindo que a chave da API não seja exposta publicamente.
 
-4. Rodar o Servidor de Desenvolvimento
+### 4. Rodar o Servidor de Desenvolvimento
 Após configurar a chave da API, inicie o servidor de desenvolvimento com o comando:
 
 ```bash
@@ -77,9 +77,6 @@ Ou, se estiver utilizando o Yarn:
 yarn dev
 ```
 O aplicativo estará disponível em http://localhost:3000.
-
-Observações 📋
-Atualmente, o aplicativo exibe apenas o nome, a imagem e a avaliação dos jogos. Mais informações, como desenvolvedor, data de lançamento e gênero, já estão implementadas e podem ser visualizadas, mas outras informações podem ser adicionadas conforme necessário no futuro.
 
 Comandos Comuns
 Instalar dependências:
